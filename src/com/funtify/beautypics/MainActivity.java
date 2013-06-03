@@ -11,12 +11,17 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MainActivity extends AbsListViewBaseActivity {
 
     public static final String TAG = "MainActivity";
     String[] imageUrls;
+//    int[] imageIds;
     DisplayImageOptions options;
 
     @Override
@@ -24,9 +29,39 @@ public class MainActivity extends AbsListViewBaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.ac_image_grid);
+        listView = (GridView) findViewById(R.id.gridview);
 
-//        Bundle bundle = getIntent().getExtras();
-        imageUrls = Constants.IMAGES;
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get("http://admin.pic.funtify.net/pic/recommend.json", new AsyncHttpResponseHandler(){
+            @Override
+            public void onSuccess(String response) {
+                Log.i(TAG, response);
+                try{
+                    JSONObject responseObj = new JSONObject(response);
+                    JSONObject datasObj = responseObj.getJSONObject("datas");
+                    JSONArray idsArray = datasObj.getJSONArray("ids");
+                    imageUrls = new String[idsArray.length()];
+                    for (int i=0; i<idsArray.length(); i++){
+                        imageUrls[i] = Constants.URLS.PICURL+"/?id="+idsArray.get(i)+"&size=s";
+                    }
+
+
+                    ((GridView) listView).setAdapter(new ImageAdapter());
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            startImagePagerActivity(position);
+                        }
+                    });
+                }catch(Throwable throwable){
+
+                }
+
+            }
+        });
+
+
+
 
         options = new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.ic_stub)
@@ -39,14 +74,7 @@ public class MainActivity extends AbsListViewBaseActivity {
 
         Log.i(TAG, "option builded");
 
-        listView = (GridView) findViewById(R.id.gridview);
-        ((GridView) listView).setAdapter(new ImageAdapter());
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startImagePagerActivity(position);
-            }
-        });
+
 
         Log.i(TAG, "listview builded");
 
