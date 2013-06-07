@@ -69,4 +69,14 @@ public class MainActivity extends BaseActivity {
         super.onSaveInstanceState(outState);
         getSupportFragmentManager().putFragment(outState, "mContent", mContent);
     }
+
+
+    public void switchContent(Fragment fragment) {
+        mContent = fragment;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+        getSlidingMenu().showContent();
+    }
 }
