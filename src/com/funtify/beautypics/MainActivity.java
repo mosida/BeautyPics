@@ -1,134 +1,72 @@
 package com.funtify.beautypics;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.Button;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
-public class MainActivity extends AbsListViewBaseActivity {
+public class MainActivity extends BaseActivity {
 
     public static final String TAG = "MainActivity";
-    String[] imageUrls;
-//    int[] imageIds;
-    DisplayImageOptions options;
+    Button recent;
+    Button hotest;
+
+    Fragment mContent;
+
+    public MainActivity() {
+        super(R.string.app_name);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate");
+        // set the Above View
+        if (savedInstanceState != null)
+            mContent = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
+        if (mContent == null)
+            mContent = new RecentFragment();
+        Log.i(TAG, "setContentView");
 
-        setContentView(R.layout.ac_image_grid);
-        listView = (GridView) findViewById(R.id.gridview);
+        // set the Above View
+        setContentView(R.layout.content_frame);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, mContent)
+                .commit();
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://admin.pic.funtify.net/pic/recommend.json", new AsyncHttpResponseHandler(){
-            @Override
-            public void onSuccess(String response) {
-                Log.i(TAG, response);
-                try{
-                    JSONObject responseObj = new JSONObject(response);
-                    JSONObject datasObj = responseObj.getJSONObject("datas");
-                    JSONArray idsArray = datasObj.getJSONArray("ids");
-                    imageUrls = new String[idsArray.length()];
-                    for (int i=0; i<idsArray.length(); i++){
-                        imageUrls[i] = Constants.URLS.PICURL+"/?id="+idsArray.get(i)+"&size=s";
-                    }
+        Log.i(TAG, "setBehindView");
 
-
-                    ((GridView) listView).setAdapter(new ImageAdapter());
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            startImagePagerActivity(position);
-                        }
-                    });
-                }catch(Throwable throwable){
-
-                }
-
-            }
-        });
+        // set the Behind View
+        setBehindContentView(R.layout.menu_frame);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.menu_frame, new MenuFragment())
+                .commit();
+        Log.i(TAG, "sildingMenu");
 
 
-
-
-        options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_stub)
-                .showImageForEmptyUri(R.drawable.ic_empty)
-                .showImageOnFail(R.drawable.ic_error)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
-
-        Log.i(TAG, "option builded");
-
-
-
-        Log.i(TAG, "listview builded");
-
-        SlidingMenu menu = new SlidingMenu(this);
-        menu.setMode(SlidingMenu.LEFT_RIGHT);
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        menu.setShadowWidthRes(R.dimen.shadow_width);
-        menu.setShadowDrawable(R.drawable.shadow);
-        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        menu.setFadeDegree(0.35f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        menu.setMenu(R.layout.menu);
-        menu.setSecondaryMenu(R.layout.menu);
-
-        Log.i(TAG, "menu builded");
+        // customize the SlidingMenu
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
     }
 
 
-    private void startImagePagerActivity(int position) {
-        Intent intent = new Intent(this, ImagePagerActivity.class);
-        intent.putExtra(Constants.Extra.IMAGES, imageUrls);
-        intent.putExtra(Constants.Extra.IMAGE_POSITION, position);
-        startActivity(intent);
+    // Update fragment visibility based on current check box state.
+    void updateFragmentVisibility() {
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        if (mCheckBox1.isChecked()) ft.show(mFragment1);
+//        else ft.hide(mFragment1);
+//        if (mCheckBox2.isChecked()) ft.show(mFragment2);
+//        else ft.hide(mFragment2);
+//        ft.commit();
     }
 
 
-    public class ImageAdapter extends BaseAdapter {
-        @Override
-        public int getCount() {
-            return imageUrls.length;
-        }
 
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final ImageView imageView;
-            if (convertView == null) {
-                imageView = (ImageView) getLayoutInflater().inflate(R.layout.item_grid_image, parent, false);
-            } else {
-                imageView = (ImageView) convertView;
-            }
-
-            imageLoader.displayImage(imageUrls[position], imageView, options);
-
-            return imageView;
-        }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, "mContent", mContent);
     }
 }

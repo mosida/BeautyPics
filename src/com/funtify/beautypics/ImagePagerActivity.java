@@ -43,6 +43,11 @@ public class ImagePagerActivity extends BaseActivity {
 
 	ViewPager pager;
 
+    public ImagePagerActivity(){
+        super(R.string.app_name);
+
+    }
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ac_image_pager);

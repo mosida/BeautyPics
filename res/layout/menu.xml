@@ -5,8 +5,22 @@
     <!--android:layout_height="match_parent" >-->
 
 <!--</fragment>-->
-        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="test"
-        ></TextView>
+            android:orientation="vertical"
+            >
+
+    <Button
+            android:id="@+id/Recent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recent"
+            android:layout_gravity="center_horizontal|top"/>
+    <Button
+            android:id="@+id/Hotest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hotest"
+            android:layout_gravity="center_horizontal|top"/>
+</LinearLayout>
