@@ -11,16 +11,8 @@
             android:orientation="vertical"
             >
 
-    <Button
-            android:id="@+id/Recent"
+    <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recent"
-            android:layout_gravity="center_horizontal|top"/>
-    <Button
-            android:id="@+id/Hotest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hotest"
-            android:layout_gravity="center_horizontal|top"/>
+            android:id="@+id/tabs" android:layout_gravity="center"/>
 </LinearLayout>

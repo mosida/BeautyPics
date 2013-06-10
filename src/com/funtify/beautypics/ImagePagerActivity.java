@@ -15,6 +15,7 @@
  *******************************************************************************/
 package com.funtify.beautypics;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
@@ -35,7 +37,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
-public class ImagePagerActivity extends BaseActivity {
+public class ImagePagerActivity extends Activity {
 
 	private static final String STATE_POSITION = "STATE_POSITION";
 
@@ -43,10 +45,13 @@ public class ImagePagerActivity extends BaseActivity {
 
 	ViewPager pager;
 
-    public ImagePagerActivity(){
-        super(R.string.app_name);
 
-    }
+    ImageLoader imageLoader = ImageLoader.getInstance();
+
+//    public ImagePagerActivity(){
+//        super(R.string.app_name);
+//
+//    }
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

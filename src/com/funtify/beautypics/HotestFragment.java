@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -15,9 +16,9 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 /**
  * Created by mosida on 13-6-7.
  */
-public class RecentFragment extends AbsListViewBaseFragment{
+public class HotestFragment extends AbsListViewBaseFragment{
 
-    private static final String TAG = "RecentFrament";
+    private static final String TAG = "HotestFrament";
 
     String[] imageUrls;
     Bundle bundle;
@@ -28,6 +29,7 @@ public class RecentFragment extends AbsListViewBaseFragment{
         super.onCreate(savedInstanceState);
 
         Log.i(TAG, "onCreate");
+
 
         imageUrls = Constants.IMAGES;
         options = new DisplayImageOptions.Builder()
@@ -48,12 +50,12 @@ public class RecentFragment extends AbsListViewBaseFragment{
 
         bundle = savedInstanceState;
         ((GridView) listView).setAdapter(new ImageAdapter());
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                startImagePagerActivity(position);
-//            }
-//        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startImagePagerActivity(position);
+            }
+        });
     }
 
     @Override
@@ -88,7 +90,7 @@ public class RecentFragment extends AbsListViewBaseFragment{
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, ViewGroup parent) {
             final ImageView imageView;
 
             Log.i(TAG, "try to getView");
@@ -100,18 +102,11 @@ public class RecentFragment extends AbsListViewBaseFragment{
 
             imageLoader.displayImage(imageUrls[position], imageView, options);
 
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startImagePagerActivity(position);
-                }
-            });
             return imageView;
         }
     }
 
     private void startImagePagerActivity(int position) {
-        Log.i(TAG, "startImagePageActivity");
         Intent intent = new Intent(getActivity(), ImagePagerActivity.class);
         intent.putExtra(Constants.Extra.IMAGES, imageUrls);
         intent.putExtra(Constants.Extra.IMAGE_POSITION, position);

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tabs">
+        <item>Recent</item>
+        <item>Hotest</item>
+        <item>Categroy</item>
+        <item>Topic</item>
+        <item>Favorite</item>
+    </string-array>
+</resources>
