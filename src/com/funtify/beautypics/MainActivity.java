@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Button;
+import com.funtify.beautypics.fragments.MenuFragment;
+import com.funtify.beautypics.fragments.RecentFragment;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class MainActivity extends BaseActivity {

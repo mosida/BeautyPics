@@ -1,4 +1,4 @@
-package com.funtify.beautypics;
+package com.funtify.beautypics.fragments;
 
 
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.funtify.beautypics.MainActivity;
+import com.funtify.beautypics.R;
 
 /**
  * Created by mosida on 13-6-8.

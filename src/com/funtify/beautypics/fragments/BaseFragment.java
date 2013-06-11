@@ -1,4 +1,4 @@
-package com.funtify.beautypics;
+package com.funtify.beautypics.fragments;
 
 import android.support.v4.app.Fragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
