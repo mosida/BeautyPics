@@ -7,4 +7,13 @@
         <item>Topic</item>
         <item>Favorite</item>
     </string-array>
+
+    <!--<integer-array name="tabs_icon">-->
+        <!--<item>@drawable/recent</item>-->
+        <!--<item>@drawable/hotest</item>-->
+        <!--<item>@drawable/category</item>-->
+        <!--<item>@drawable/topic</item>-->
+        <!--<item>@drawable/favorite</item>-->
+    <!--</integer-array>-->
+
 </resources>

@@ -3,12 +3,11 @@ package com.funtify.beautypics.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.*;
 import com.funtify.beautypics.MainActivity;
 import com.funtify.beautypics.R;
 
@@ -17,19 +16,29 @@ import com.funtify.beautypics.R;
  */
 public class MenuFragment extends Fragment {
     ListView tabs;
+    String[] tabsString;
+    int[] tabsInt = {
+            R.drawable.recent,
+            R.drawable.hotest,
+            R.drawable.category,
+            R.drawable.topic,
+            R.drawable.favorite
+    };
+//    LayoutInflater layoutInflater;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        layoutInflater = inflater;
         return inflater.inflate(R.layout.menu, null);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        tabs = (ListView) getView().findViewById(R.id.tabs);
-        String[] colors = getResources().getStringArray(R.array.tabs);
-        ArrayAdapter<String> colorAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, colors);
-        tabs.setAdapter(colorAdapter);
+        tabs = (ListView) getView().findViewById(R.id.listTabs);
+        tabsString = getResources().getStringArray(R.array.tabs);
+
+        MenuAdapter menuAdapter = new MenuAdapter();
+        tabs.setAdapter(menuAdapter);
 
         tabs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -60,5 +69,50 @@ public class MenuFragment extends Fragment {
         }
     }
 
+    class MenuAdapter extends BaseAdapter{
+
+        LayoutInflater layoutInflater;
+        public MenuAdapter(){
+            layoutInflater = LayoutInflater.from(getActivity());
+        }
+
+        @Override
+        public int getCount() {
+            return tabsString.length;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return i;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View container, ViewGroup viewGroup) {
+            ViewHoder viewHoder = null;
+            if (container==null){
+                container = layoutInflater.inflate(R.layout.menu_list, null);
+                viewHoder = new ViewHoder();
+                viewHoder.menuIcon = (ImageView)container.findViewById(R.id.menu_icon);
+                viewHoder.menuName = (TextView)container.findViewById(R.id.menu_text);
+                container.setTag(viewHoder);
+            }else{
+                viewHoder = (ViewHoder) container.getTag();
+            }
+            viewHoder.menuName.setText(tabsString[i]);
+            Log.i(MainActivity.TAG, "int is:"+tabsInt[i]);
+            viewHoder.menuIcon.setImageResource(tabsInt[i]);
+            return container;
+        }
+
+        class ViewHoder{
+            ImageView menuIcon;
+            TextView menuName;
+        }
+    }
 
 }

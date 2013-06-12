@@ -91,7 +91,7 @@ public final class Constants {
 			// Special cases
 			"file:///sdcard/Universal Image Loader @#&=+-_.,!()~'%20.png", // Image from SD card with encoded symbols
 			"assets://Living Things @#&=+-_.,!()~'%20.jpg", // Image from assets
-			"drawable://" + R.drawable.ic_launcher, // Image from drawables
+			"drawable://" + R.drawable.icon, // Image from drawables
 			"http://upload.wikimedia.org/wikipedia/ru/b/b6/Как_кот_с_мышами_воевал.png", // Link with UTF-8
 			"https://www.eff.org/sites/default/files/chrome150_0.jpg", // Image from HTTPS
 			"http://bit.ly/soBiXr", // Redirect link
