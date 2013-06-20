@@ -114,7 +114,7 @@ public final class Constants {
 
 
     public static class URLS{
-        public static final String RECOMMEND = "http://admin.pic.funtify.net/pic/recommend.json";
+        public static final String RECENT = "http://admin.pic.funtify.net/pic/recent.json";
         public static final String PICURL = "http://admin.pic.funtify.net/pic/file/";
 
     }

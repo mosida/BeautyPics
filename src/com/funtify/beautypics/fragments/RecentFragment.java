@@ -7,14 +7,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.*;
 import com.funtify.beautypics.Constants;
 import com.funtify.beautypics.ImagePagerActivity;
 import com.funtify.beautypics.R;
-import com.funtify.beautypics.fragments.AbsListViewBaseFragment;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Created by mosida on 13-6-7.
@@ -23,7 +24,8 @@ public class RecentFragment extends AbsListViewBaseFragment {
 
     private static final String TAG = "RecentFrament";
 
-    String[] imageUrls;
+    String[] small_imageUrls;
+    String[] middle_imageUrls;
     Bundle bundle;
     DisplayImageOptions options;
 
@@ -33,7 +35,6 @@ public class RecentFragment extends AbsListViewBaseFragment {
 
         Log.i(TAG, "onCreate");
 
-        imageUrls = Constants.IMAGES;
         options = new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.ic_stub)
                 .showImageForEmptyUri(R.drawable.ic_empty)
@@ -49,15 +50,46 @@ public class RecentFragment extends AbsListViewBaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         Log.i(TAG, "onActivityCreated");
-
         bundle = savedInstanceState;
-        ((GridView) listView).setAdapter(new ImageAdapter());
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                startImagePagerActivity(position);
-//            }
-//        });
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(Constants.URLS.RECENT, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                Log.i(TAG, response);
+                if(response!=null){
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+                        int code = jsonObject.getInt("code");
+                        if (code==0){
+                            JSONObject datas = jsonObject.getJSONObject("datas");
+                            JSONArray idsArrays = datas.getJSONArray("ids");
+                            int total = datas.getInt("total");
+                            small_imageUrls = new String[total];
+                            middle_imageUrls = new String[total];
+                            for (int i=0; i<total; i++){
+                                small_imageUrls[i] = Constants.URLS.PICURL+"?id="+idsArrays.getInt(i)+"&size=s";
+                                middle_imageUrls[i] = Constants.URLS.PICURL+"?id="+idsArrays.getInt(i)+"&size=m";
+                            }
+                            ((GridView) listView).setAdapter(new ImageAdapter());
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    startImagePagerActivity(position);
+                                }
+                            });
+                        }
+                    }catch (Throwable throwable){
+                        Log.e(TAG, "getData", throwable);
+                    }
+
+                }
+
+            }
+        });
+
+
+
+
     }
 
     @Override
@@ -67,6 +99,9 @@ public class RecentFragment extends AbsListViewBaseFragment {
 
         View view = inflater.inflate(R.layout.ac_image_grid, container);
         listView = (GridView) view.findViewById(R.id.gridview);
+        TextView loadView = new TextView(getActivity());
+        loadView.setText("loading...");
+        listView.setEmptyView(loadView);
 
         Log.i(TAG, "onCreateView over");
 //        return view;
@@ -78,7 +113,7 @@ public class RecentFragment extends AbsListViewBaseFragment {
     public class ImageAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return imageUrls.length;
+            return small_imageUrls.length;
         }
 
         @Override
@@ -102,22 +137,17 @@ public class RecentFragment extends AbsListViewBaseFragment {
                 imageView = (ImageView) convertView;
             }
 
-            imageLoader.displayImage(imageUrls[position], imageView, options);
+            imageLoader.displayImage(small_imageUrls[position], imageView, options);
 
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startImagePagerActivity(position);
-                }
-            });
             return imageView;
         }
     }
 
     private void startImagePagerActivity(int position) {
         Log.i(TAG, "startImagePageActivity");
+
         Intent intent = new Intent(getActivity(), ImagePagerActivity.class);
-        intent.putExtra(Constants.Extra.IMAGES, imageUrls);
+        intent.putExtra(Constants.Extra.IMAGES, middle_imageUrls);
         intent.putExtra(Constants.Extra.IMAGE_POSITION, position);
         startActivity(intent);
     }
